@@ -245,6 +245,7 @@ apply_all_in_dir() {
     # https://github.com/JacKeTUs/wine/commits/lmu-d2d1-tinkering
     echo "WINE: -GAME FIXES- add le mans ultimate patches"
     apply_patch "../patches/game-patches/lemansultimate-gameinput.patch"
+    apply_patch "../patches/game-patches/lemansultimate-vr.patch"
 
 ### END GAME PATCH SECTION ###
 

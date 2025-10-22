@@ -1,0 +1,63 @@
+From 7cd374732d8be00963e1348016b2f5b1792fa9c5 Mon Sep 17 00:00:00 2001
+From: Samuel Rounce <me@samuelrounce.co.uk>
+Date: Sun, 19 Oct 2025 23:22:00 +0100
+Subject: [PATCH] win32u: Stub NtUserDisplayConfigGetDeviceInfo(
+ DISPLAYCONFIG_DEVICE_INFO_GET_SDR_WHITE_LEVEL ).
+
+---
+ dlls/win32u/sysparams.c    | 12 +++++++++++-
+ dlls/win32u/tests/win32u.c |  9 +++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
+index 41eaa04791b..9b0709e246e 100644
+--- a/dlls/win32u/sysparams.c
++++ b/dlls/win32u/sysparams.c
+@@ -7565,12 +7565,22 @@ NTSTATUS WINAPI NtUserDisplayConfigGetDeviceInfo( DISPLAYCONFIG_DEVICE_INFO_HEAD
+ 
+         return STATUS_SUCCESS;
+     }
++    case DISPLAYCONFIG_DEVICE_INFO_GET_SDR_WHITE_LEVEL:
++    {
++        DISPLAYCONFIG_SDR_WHITE_LEVEL *white_level = (DISPLAYCONFIG_SDR_WHITE_LEVEL *)packet;
++
++        FIXME( "DISPLAYCONFIG_DEVICE_INFO_GET_SDR_WHITE_LEVEL stub.\n" );
++
++        if (packet->size < sizeof(*white_level))
++            return STATUS_INVALID_PARAMETER;
++
++        return STATUS_NOT_SUPPORTED;
++    }
+     case DISPLAYCONFIG_DEVICE_INFO_SET_TARGET_PERSISTENCE:
+     case DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_BASE_TYPE:
+     case DISPLAYCONFIG_DEVICE_INFO_GET_SUPPORT_VIRTUAL_RESOLUTION:
+     case DISPLAYCONFIG_DEVICE_INFO_SET_SUPPORT_VIRTUAL_RESOLUTION:
+     case DISPLAYCONFIG_DEVICE_INFO_SET_ADVANCED_COLOR_STATE:
+-    case DISPLAYCONFIG_DEVICE_INFO_GET_SDR_WHITE_LEVEL:
+     default:
+         FIXME( "Unimplemented packet type %u.\n", packet->type );
+         return STATUS_INVALID_PARAMETER;
+diff --git a/dlls/win32u/tests/win32u.c b/dlls/win32u/tests/win32u.c
+index 8e1b56f6501..daaef070095 100644
+--- a/dlls/win32u/tests/win32u.c
++++ b/dlls/win32u/tests/win32u.c
+@@ -1304,6 +1304,15 @@ static void test_NtUserDisplayConfigGetDeviceInfo(void)
+     source_name.header.id = 0;
+     status = NtUserDisplayConfigGetDeviceInfo(&source_name.header);
+     ok(status == STATUS_UNSUCCESSFUL || status == STATUS_NOT_SUPPORTED, "got %#lx.\n", status);
++
++    DISPLAYCONFIG_SDR_WHITE_LEVEL white_level;
++    white_level.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_SDR_WHITE_LEVEL;
++    white_level.header.size = sizeof(source_name.header);
++    source_name.header.adapterId.LowPart = 0xFFFF;
++    source_name.header.adapterId.HighPart = 0xFFFF;
++    white_level.header.id = 0;
++    status = NtUserDisplayConfigGetDeviceInfo(&white_level.header);
++    ok(status == STATUS_NOT_SUPPORTED, "got %#lx.\n", status);
+ }
+ 
+ static LRESULT WINAPI test_ipc_message_proc( HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam )
+-- 
+2.51.0
+
+
