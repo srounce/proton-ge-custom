@@ -1,6 +1,7 @@
 [submodule "wine"]
 	path = wine
-	url = https://github.com/JacKeTUs/wine
+	url = https://github.com/srounce/wine
+	branch = lmu-support-displayconfig-display-info-sdr-white-level
 [submodule "wine-staging"]
 	path = wine-staging
 	url = https://github.com/wine-staging/wine-staging
