@@ -1,6 +1,6 @@
 [submodule "wine"]
 	path = wine
-	url = https://github.com/JacKeTUs/wine
+	url = https://github.com/srounce/wine
 [submodule "wine-staging"]
 	path = wine-staging
 	url = https://github.com/wine-staging/wine-staging
