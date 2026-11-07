@@ -5,3 +5,4 @@
 04-d2d1-scope-and-lifetime.patch
 05-d3dx-bounds.patch
 06-dinput-hotplug.patch
+07-winewayland-vk-wine-device-extensions.patch

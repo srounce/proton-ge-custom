@@ -1,0 +1,23 @@
+From: Samuel Rounce <me@samuelrounce.co.uk>
+Subject: [PATCH] winewayland: Advertise VK_WINE_openvr/openxr_device_extensions
+
+wineopenxr and vrclient hand DXVK and vkd3d-proton the pseudo-extensions
+VK_WINE_openxr_device_extensions / VK_WINE_openvr_device_extensions, which
+win32u expands into the runtime's real device extensions at vkCreateDevice.
+Since "winevulkan: Check enabled device extensions support on the PE side"
+(4812732aa46) the PE loader rejects any requested extension the display
+driver did not advertise, so a device create that includes the pseudo
+extension fails with VK_ERROR_EXTENSION_NOT_PRESENT. winex11 and nulldrv
+set these flags in map_device_extensions; winewayland does not, so every
+OpenXR title running under PROTON_ENABLE_WAYLAND=1 fails to create its
+D3D11/D3D12 device (LMU: cubeDirectX Init_Device check failure).
+
+diff --git a/dlls/winewayland.drv/vulkan.c b/dlls/winewayland.drv/vulkan.c
+index 543d2b4284d..6a08d62421a 100644
+--- a/dlls/winewayland.drv/vulkan.c
++++ b/dlls/winewayland.drv/vulkan.c
+@@ -97,2 +97,4 @@ static void wayland_map_device_extensions(struct vulkan_device_extensions *exten
+     if (extensions->has_VK_KHR_external_fence_fd) extensions->has_VK_KHR_external_fence_win32 = 1;
++    extensions->has_VK_WINE_openvr_device_extensions = 1;
++    extensions->has_VK_WINE_openxr_device_extensions = 1;
+ }
